@@ -1,0 +1,371 @@
+Decorator Design Pattern
+
+Decorator design pattern is structural design pattern that allows you to add new behaviour or responsiblities
+to an existing object dynamically without modifiying its original class
+
+decorator = wrap on object and add extra behaviour to it.
+
+Imagine you have a coffee:
+
+Coffee
+
+Then you want:
+
+Coffee + Milk
+
+Then:
+
+Coffee + Milk + Sugar
+
+Then:
+
+Coffee + Milk + Sugar + Whipped Cream
+
+Instead of creating hundreds of classes:
+
+MilkCoffee
+SugarMilkCoffee
+WhippedCreamSugarMilkCoffee
+...
+
+you wrap the coffee object with decorators.
+
+WhippedCream
+    ↓
+  Sugar
+    ↓
+  Milk
+    ↓
+ Coffee
+
+That's the core idea of the Decorator Pattern.
+
+interface Coffe{
+  double getCost();
+  String getDescription();
+}
+
+
+
+                 Coffee
+                    ↑
+          ┌─────────┴──────────┐
+          │                    │
+    Concrete Coffee        Decorators
+                               ↑
+                     ┌─────────┼─────────┐
+                     │         │         │
+                   Milk      Sugar    Chocolate
+
+
+creating basic coffee
+
+class SimpleCoffe implements Coffee{
+  @Override
+  public double getCost(){
+    return 50.00;
+  }
+
+  @Override 
+  public void getDescription(){
+    return "Simple coffee"
+  }
+}
+
+Coffee coffee = new SimpleCoffee();
+
+System.out.println(coffee.getDescription());
+System.out.println(coffee.getCost());
+
+Simple Coffee
+50.0
+
+Now create Decorator // this is most important class
+abstract class CoffeeDecorator implements Coffee{
+  protected Coffee coffee;
+
+  public CoffeeDecorator (Coffee coffee){
+    this.coffee = coffee
+  }
+
+  @Override
+  public double getCost(){
+    return coffee.getCost()
+  }
+
+   @Override
+    public String getDescription() {
+        return coffee.getDescription();
+    }
+}
+
+Notice this:
+
+protected Coffee coffee;
+
+The decorator contains another Coffee object.
+
+That's called composition.
+
+So:
+
+CoffeeDecorator
+      |
+      └── Coffee
+
+And because CoffeeDecorator itself implements Coffee, we can wrap decorators around other decorators.
+
+That's the magic.
+
+Create Milk Decorator
+class MilkDecorator extends CoffeeDecorator{
+
+  public MilkDecorator(Coffee coffee){
+    Super(coffee)
+  }
+
+    @Override
+    public double getCost() {
+        return coffee.getCost() + 10;
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", Milk";
+    }
+
+}
+
+Suppose:
+
+Coffee = ₹50
+Milk = ₹10
+
+Then:
+
+Coffee coffee = new SimpleCoffee();
+
+coffee = new MilkDecorator(coffee);
+
+Now:
+
+coffee.getCost();
+
+returns:
+
+60
+
+And:
+
+coffee.getDescription();
+
+returns:
+
+Simple Coffee, Milk
+
+class SugarDecorator extends CoffeeDecorator {
+
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public double getCost() {
+        return coffee.getCost() + 5;
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", Sugar";
+    }
+}
+
+class ChocolateDecorator extends CoffeeDecorator {
+
+    public ChocolateDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public double getCost() {
+        return coffee.getCost() + 15;
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", Chocolate";
+    }
+}
+public class Main {
+
+    public static void main(String[] args) {
+
+        Coffee coffee = new SimpleCoffee();
+
+        coffee = new MilkDecorator(coffee);
+
+        coffee = new SugarDecorator(coffee);
+
+        coffee = new ChocolateDecorator(coffee);
+
+        System.out.println(coffee.getDescription());
+        System.out.println(coffee.getCost());
+    }
+}
+
+Simple Coffee, Milk, Sugar, Chocolate
+80.0
+
+12. Why not simply modify SimpleCoffee?
+
+You might ask:
+
+Why not add methods like addMilk(), addSugar() to SimpleCoffee?
+
+You could, but then SimpleCoffee becomes responsible for every possible feature.
+
+Imagine:
+
+class Coffee {
+
+    boolean milk;
+    boolean sugar;
+    boolean chocolate;
+    boolean whippedCream;
+    boolean caramel;
+
+    ...
+}
+
+Now every new topping requires modifying the class.
+
+Decorator avoids that.
+
+You can create:
+
+class CaramelDecorator
+
+without changing:
+
+SimpleCoffee
+
+This is closely related to the Open/Closed Principle:
+
+Software entities should be open for extension but closed for modification.
+
+13. Decorator and inheritance
+
+This is another important concept.
+
+Normally, you might think:
+
+Coffee
+  ↑
+MilkCoffee
+  ↑
+SugarMilkCoffee
+  ↑
+ChocolateSugarMilkCoffee
+
+That's inheritance.
+
+Decorator uses composition instead:
+
+Chocolate
+   ↓
+Sugar
+   ↓
+Milk
+   ↓
+Coffee
+
+So instead of creating subclasses for every combination, we dynamically combine objects.
+
+14. Composition vs inheritance
+
+This is one of the reasons Decorator is powerful.
+
+Inheritance
+class MilkCoffee extends Coffee {
+}
+
+The behavior is fixed at the class level.
+
+Composition
+Coffee coffee = new MilkDecorator(
+                    new SimpleCoffee()
+                );
+
+The behavior is selected at runtime.
+
+So:
+
+Inheritance
+    ↓
+"What is this object?"
+
+Composition
+    ↓
+"What behavior should this object have?"
+15. Decorators can be added dynamically
+
+This is another major benefit.
+
+You could have:
+
+Coffee coffee = new SimpleCoffee();
+
+Customer 1:
+
+coffee = new MilkDecorator(coffee);
+
+Customer 2:
+
+coffee = new MilkDecorator(coffee);
+coffee = new SugarDecorator(coffee);
+
+Customer 3:
+
+coffee = new ChocolateDecorator(coffee);
+coffee = new MilkDecorator(coffee);
+coffee = new SugarDecorator(coffee);
+
+You don't need separate classes for each combination.
+
+                 Component
+                    ↑
+          ┌─────────┴──────────┐
+          │                    │
+   ConcreteComponent       Decorator
+                               ↑
+                     ┌─────────┼─────────┐
+                     │         │         │
+                  DecoratorA DecoratorB DecoratorC
+
+Component
+
+Defines the common interface.
+
+interface Coffee {
+    double getCost();
+}
+
+
+Concrete Component
+Original object.
+class SimpleCoffee implements Coffee {
+}
+
+
+Decorator
+Base wrapper.
+abstract class CoffeeDecorator implements Coffee {
+
+    protected Coffee coffee;
+}
+
+
+Concrete Decorator
+Adds behavior.
+class MilkDecorator extends CoffeeDecorator {
+}

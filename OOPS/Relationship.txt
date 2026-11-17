@@ -1,0 +1,763 @@
+Association
+defines the realtionship between two or more classes that are connected to each other. It represents how object interact and 
+communicate with each other. In association of object one class is related to the object of ther class, but they can exist independtly.
+There is no ownership requirement.
+Real-world example
+Doctor -------- Patient
+But:
+
+    Doctor doesn't own Patient.
+    Patient doesn't own Doctor.
+    Both can exist independently.
+    Their relationship can change.
+
+Therefore:
+
+Doctor ↔ Patient = Association
+
+Types of Association
+One-to-One
+    Person -------- Passport
+
+    One person has one passport.
+
+    class Person {
+        Passport passport;
+    }
+
+    class Passport {
+        String passportNumber;
+    }
+
+One-to-Many
+    Teacher -------- Students
+
+    One teacher can teach many students.
+
+    class Teacher {
+
+        List<Student> students;
+    }
+
+    class Student {
+        String name;
+}
+
+Many-to-Many
+Student -------- Course
+
+  One student can take multiple courses.
+
+  One course can have multiple students.
+
+  class Student {
+      List<Course> courses;
+  }
+
+  class Course {
+    List<Student> students;
+}
+
+Association can also be unidirectional or bidirectional.
+Unidirectional
+
+Only one object knows about the other.
+
+Customer ------> Address
+
+Java:
+
+class Customer {
+
+    private Address address;
+}
+
+Customer knows about Address.
+
+But:
+
+class Address {
+
+    // Doesn't know about Customer
+}
+
+So:
+
+Customer → Address
+Bidirectional
+
+Both objects know about each other.
+
+Customer <------> Address
+
+Java:
+
+class Customer {
+
+    private Address address;
+}
+
+class Address {
+
+    private Customer customer;
+}
+
+Now both objects have references to each other.
+
+AGGRGATION
+
+It represents a:
+Has-a relationship where the contained object can exist independently of the container.
+Real-world Aggregation Example
+
+Consider:
+
+University
+     |
+     | has
+     ↓
+Students
+
+A university has students.
+
+But suppose the university closes.
+
+The students don't disappear.
+
+They can join another university.
+
+Therefore:
+
+University
+    ◇
+    |
+    |
+ Student
+
+In UML, aggregation is represented using an empty diamond.
+
+University ◇-------- Student
+
+The empty diamond is on the owner/container side.
+
+7. Java Aggregation Example
+class Employee {
+
+    private String name;
+
+    public Employee(String name) {
+        this.name = name;
+    }
+
+    public void work() {
+        System.out.println(name + " is working");
+    }
+}
+
+Now:
+
+class Department {
+
+    private List<Employee> employees;
+
+    public Department(List<Employee> employees) {
+        this.employees = employees;
+    }
+}
+
+Usage:
+
+Employee e1 = new Employee("John");
+Employee e2 = new Employee("David");
+
+List<Employee> employees = new ArrayList<>();
+
+employees.add(e1);
+employees.add(e2);
+
+Department department = new Department(employees);
+
+Notice something important.
+
+The Employee objects were created outside the Department.
+
+Employee e1 = new Employee("John");
+
+Then they were passed into the department:
+
+new Department(employees);
+
+Therefore, the department doesn't control their lifecycle.
+
+
+COMPOSITION 
+The child object belongs to the parent and generally cannot meaningfully exist independently of it.
+House
+ |
+ | contains
+ ↓
+Room
+
+A house contains rooms.
+
+If the house is destroyed, its rooms as parts of that house are also destroyed.
+
+Therefore:
+
+House ◆-------- Room
+
+The filled diamond represents composition.
+Consider:
+
+Order
+ |
+ | contains
+ ↓
+OrderItem
+
+An OrderItem belongs to a particular order.
+
+For example:
+
+Order #1001
+   |
+   |---- iPhone
+   |---- AirPods
+   |---- Charger
+
+If Order #1001 is deleted:
+
+Order #1001 ❌
+
+OrderItem iPhone ❌
+OrderItem AirPods ❌
+OrderItem Charger ❌
+
+The order items don't make sense as independent items belonging to that order.
+
+That's composition.
+
+10. Java Composition Example
+class OrderItem {
+
+    private String productName;
+
+    public OrderItem(String productName) {
+        this.productName = productName;
+    }
+}
+
+Now:
+
+class Order {
+
+    private List<OrderItem> items;
+
+    public Order() {
+        items = new ArrayList<>();
+
+        items.add(new OrderItem("iPhone"));
+        items.add(new OrderItem("AirPods"));
+        items.add(new OrderItem("Charger"));
+    }
+}
+
+Usage:
+
+Order order = new Order();
+
+Notice:
+
+new OrderItem(...)
+
+is performed inside the Order.
+
+The Order controls creation of the OrderItem.
+
+This is a strong indication of composition.
+
+11. The Most Important Difference
+
+Let's compare them.
+
+Feature	Association	Aggregation	Composition
+Relationship	General	Has-a	Strong has-a
+Ownership	No	Weak	Strong
+Lifecycle dependency	No	No	Yes
+Child can exist independently?	Yes	Yes	Generally no
+UML	Simple line	Empty diamond ◇	Filled diamond ◆
+Example	Doctor–Patient	Department–Employee	Order–OrderItem
+12. Association vs Aggregation
+
+This is a common interview question.
+
+Association
+Doctor -------- Patient
+
+Doctor interacts with patient.
+
+There is no ownership.
+
+Aggregation
+Department ◇-------- Employee
+
+Department has employees.
+
+But employees can exist independently.
+
+So:
+
+Every aggregation is an association, but not every association is aggregation.
+
+13. Aggregation vs Composition
+
+This is probably the most important distinction.
+
+Aggregation
+Department ◇-------- Employee
+
+Employee:
+
+Employee
+   ↓
+can exist without Department
+Composition
+Order ◆-------- OrderItem
+
+OrderItem:
+
+Order deleted
+      ↓
+OrderItem also becomes invalid/deleted
+
+So:
+
+Aggregation = weak ownership
+
+Composition = strong ownership
+
+14. Very Important Java Point
+
+Java doesn't have a special keyword called:
+
+aggregation
+
+or:
+
+composition
+
+There is no:
+
+aggregate Employee;
+
+or:
+
+compose OrderItem;
+
+Instead, we represent these relationships using object references.
+
+For example:
+
+class Department {
+    private List<Employee> employees;
+}
+
+could represent aggregation.
+
+And:
+
+class Order {
+
+    private List<OrderItem> items;
+
+    public Order() {
+        items.add(new OrderItem());
+    }
+}
+
+could represent composition.
+
+The distinction comes from object ownership and lifecycle, not from a Java keyword.
+
+15. A Very Simple Example to Remember
+
+Imagine a Company.
+
+Company
+  |
+  | has
+  ↓
+Employees
+
+Employees can leave the company.
+
+Therefore:
+
+Company ◇-------- Employee
+
+Aggregation.
+
+Now imagine:
+
+House
+  |
+  | has
+  ↓
+Room
+
+The room is part of that particular house.
+
+Therefore:
+
+House ◆-------- Room
+
+Composition.
+
+16. Composition Doesn't Always Mean Physical Destruction
+
+This is an important advanced point.
+
+People often say:
+
+"If parent is destroyed, child must be destroyed."
+
+That's useful for learning, but it's a little too simplistic.
+
+The deeper idea is:
+
+The child has no independent ownership/lifecycle outside the parent.
+
+For example:
+
+Order ◆---- OrderItem
+
+An OrderItem is meaningful as part of an order.
+
+But:
+
+Order ◆---- Customer
+
+would generally be wrong.
+
+Why?
+
+Because a customer can exist even if an order is deleted.
+
+So:
+
+Customer
+   ↓
+exists independently
+
+Therefore Customer shouldn't normally be modeled as a composition child of Order.
+
+17. Example From E-Commerce
+
+Let's design a simple e-commerce system.
+
+Customer
+    |
+    | places
+    ↓
+  Order
+    |
+    | contains
+    ↓
+ OrderItem
+    |
+    | references
+    ↓
+ Product
+
+Now determine the relationships.
+
+Customer → Order
+
+A customer can exist without an order.
+
+An order can potentially remain in the system even if customer status changes.
+
+This is generally an association.
+
+Customer -------- Order
+Order → OrderItem
+
+Order contains its line items.
+
+The line items belong to the order.
+
+This is commonly modeled as composition.
+
+Order ◆-------- OrderItem
+OrderItem → Product
+
+An order item references a product.
+
+Product definitely exists independently.
+
+Therefore:
+
+OrderItem -------- Product
+
+Association.
+
+18. Example With Your Backend Experience
+
+Suppose you're building an event-management application.
+
+You have:
+
+Event
+EventAttendance
+User
+
+An event has attendees.
+
+Event -------- User
+
+Could be association.
+
+But if you have:
+
+Event
+   |
+   | contains
+   ↓
+EventAttendance
+
+then you might model:
+
+Event ◆-------- EventAttendance
+
+because an EventAttendance record represents attendance for that particular event.
+
+However:
+
+EventAttendance -------- User
+
+is an association because the user exists independently.
+
+So:
+
+                 ┌──────────────┐
+                 │     User     │
+                 └──────┬───────┘
+                        │
+                        │ association
+                        │
+                 ┌──────▼────────┐
+                 │EventAttendance│
+                 └──────▲────────┘
+                        ◆
+                        │ composition
+                        │
+                 ┌──────┴───────┐
+                 │    Event     │
+                 └──────────────┘
+
+This is a very realistic example for backend development.
+
+19. Association vs Dependency
+
+Another concept that is often confused with association is dependency.
+
+Association
+
+The object maintains a reference.
+
+class Car {
+
+    private Engine engine;
+}
+
+Car has an Engine reference.
+
+Dependency
+
+An object temporarily uses another object.
+
+class Car {
+
+    void service(ServiceCenter center) {
+        center.serviceCar(this);
+    }
+}
+
+Car depends on ServiceCenter for that operation, but doesn't necessarily store it.
+
+So:
+
+Association
+Car ───────── Engine
+
+while:
+
+Dependency
+Car - - - - - > ServiceCenter
+
+UML uses a dashed arrow for dependency.
+
+20. Association vs Inheritance
+
+Another very important distinction.
+
+Association
+
+Means:
+
+HAS-A / USES-A
+
+Car -------- Engine
+
+A car has an engine.
+
+Inheritance
+
+Means:
+
+IS-A
+
+        Vehicle
+           ▲
+           |
+          Car
+
+A car is a vehicle.
+
+Java:
+
+class Vehicle {
+}
+
+class Car extends Vehicle {
+}
+
+Therefore:
+
+Car IS-A Vehicle
+
+but:
+
+Car HAS-A Engine
+21. Easy Memory Trick
+
+Remember these three words:
+
+Association → KNOWS
+Doctor knows Patient
+Aggregation → HAS
+Department has Employees
+Composition → OWNS
+Order owns OrderItems
+
+So:
+
+Association
+     ↓
+   KNOWS
+
+Aggregation
+     ↓
+    HAS
+
+Composition
+     ↓
+   OWNS
+22. UML Symbols
+
+You should know these for interviews.
+
+Association
+ClassA ---------------- ClassB
+
+Simple line.
+
+Aggregation
+ClassA ◇---------------- ClassB
+
+Empty diamond.
+
+Composition
+ClassA ◆---------------- ClassB
+
+Filled diamond.
+
+Inheritance
+ClassA ◁---------------- ClassB
+
+Usually shown as a hollow triangle pointing toward the parent.
+
+Dependency
+ClassA - - - - - - - -> ClassB
+
+Dashed arrow.
+
+23. Complete Relationship Hierarchy
+
+You can think about OOP relationships like this:
+
+                     Relationship
+                          |
+          ┌───────────────┼────────────────┐
+          │               │                │
+    Association       Dependency      Inheritance
+          |
+     ┌────┴─────┐
+     │          │
+Aggregation  Composition
+
+But conceptually, aggregation and composition are specialized forms of association:
+
+Association
+    │
+    ├── Aggregation
+    │
+    └── Composition
+24. Interview Question: "What is the difference?"
+
+A strong interview answer would be:
+
+Association represents a general relationship where two objects know about or interact with each other without ownership.
+Aggregation is a weak has-a relationship where the child can exist independently of the parent.
+Composition is a strong has-a relationship where the child is owned by the parent and its lifecycle is dependent on the parent.
+
+Then give examples:
+
+Doctor ───── Patient       Association
+
+Department ◇──── Employee  Aggregation
+
+Order ◆──── OrderItem      Composition
+
+That's a very good interview answer.
+
+25. Final Cheat Sheet
+Relationship	Meaning	Ownership	Independent lifecycle	Example
+Association	Knows/uses	❌	✅	Doctor–Patient
+Aggregation	Has-a	Weak	✅	Department–Employee
+Composition	Strong has-a	Strong	❌/dependent	Order–OrderItem
+Inheritance	Is-a	N/A	N/A	Car–Vehicle
+Dependency	Temporarily uses	❌	✅	Car–ServiceCenter
+Remember:
+IS-A       → Inheritance
+
+KNOWS/USES → Association
+
+HAS-A      → Aggregation
+
+OWNS-A     → Composition
+
+TEMPORARILY USES → Dependency
+
+And the most important rule:
+
+Aggregation:
+Parent and child can live independently.
+
+Composition:
+Child belongs to parent and its lifecycle is tied to parent.
+
+
+
+
+

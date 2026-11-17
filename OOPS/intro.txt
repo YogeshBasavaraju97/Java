@@ -1,0 +1,11 @@
+Class: is blueprint or template to create the object. It defines the properties and behaviour that object will have.
+Multiple objects are created using single class.
+Object: An Object in Java is an instance of a class that represents a real-world entity.
+ It is used to access the variables and methods defined inside a class.
+ 
+Constructor: is used to invoke the object or to create a new object with the new of new keyword. 
+ Default Constructor: A constructor that does not accept any parameters and initializes an object with default values.
+ Parameterized Constructor: A constructor that accepts parameters to initialize an object with specific values.
+ Copy Constructor: A user-defined constructor that creates a new object by copying the data of another object of the same class.
+ Private Constructor: A constructor declared with the private access modifier that prevents object creation from outside the class.
+

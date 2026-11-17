@@ -1,0 +1,102 @@
+
+Java Collection framework is collection of interfaces, classes, and algorithms used to store retrive, manipulate 
+and process group of object
+In simple words:
+Collection Framework = A predefined set of interfaces and classes that helps us manage multiple objects efficiently.
+
+Why do we need Collections?
+
+Before collections, developers commonly used arrays.
+
+Arrays have limitations:
+- Fixed size.
+- Difficult to insert or delete elements.
+- Limited built-in operations.
+- Less flexible for dynamic data.
+Collections solve these problems by providing dynamic data structures.
+
+
+Important characteristics
+- Dynamic storage.
+- Ready-made data structures.
+- Searching and sorting.
+- Insertion and deletion.
+- Iteration.
+- Reusable algorithms.
+- Type safety through Generics.
+
+
+The framework has two important branches:
+1. Collection hierarchy
+2. Map hierarchy
+
+Iterable
+   |
+Collection
+   |
+   |---- List
+   |      |---- ArrayList
+   |      |---- LinkedList
+   |      |---- Vector
+   |              |---- Stack
+   |
+   |---- Set
+   |      |---- HashSet
+   |      |       |---- LinkedHashSet
+   |      |
+   |      |---- SortedSet
+   |              |---- NavigableSet
+   |                      |---- TreeSet
+   |
+   |---- Queue
+          |---- PriorityQueue
+          |---- Deque
+                  |---- ArrayDeque
+                  |---- LinkedList
+
+
+Map
+ |
+ |---- HashMap
+ |       |---- LinkedHashMap
+ |
+ |---- Hashtable
+ |
+ |---- SortedMap
+ |       |---- NavigableMap
+ |               |---- TreeMap
+ |
+ |---- ConcurrentMap
+         |---- ConcurrentHashMap
+
+
+
+The Main interfaces are
+List - stores duplicate elements and maintain insertion order
+Set  - Stores unique elements
+Queue - Processes elements in queue order
+
+Map - Stores key value pair 
+
+
+List Interface : list is interface where it alows to store elements in insertion order and allows duplicate elements
+
+List <String> languages = ArrayList<String>;
+languages.add('pyhton')
+languages.add('java')
+languages.add('javaScript')
+
+Important List methods
+Method	           Purpose
+add()	             Add element
+get()	             Retrieve element
+set()	             Update element
+remove()          	Remove element
+contains()	        Check element
+size()	            Get size
+indexOf()	         Find first index
+lastIndexOf()	     Find last index
+isEmpty()	         Check empty
+clear()	           Remove all elements
+
+

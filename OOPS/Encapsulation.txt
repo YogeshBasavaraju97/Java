@@ -1,0 +1,7 @@
+Encapsulation
+is a process of wrapping data and methods into single unit, usually a class and resricting direct access to the data.
+It act as protctive shild that prevents data from being accessed directly from outside the class.
+
+Encapsulation is achived using access modifiers
+
+

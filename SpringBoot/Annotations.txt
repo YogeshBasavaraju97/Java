@@ -1,0 +1,20 @@
+
+
+Springboot annotations are used to 
+configure application, 
+define class as spring managed components,
+inject dependencies,
+create REST API,
+handle databasae operations,
+validate request,
+Manage application behaviour
+
+1. Core Springboot annotations
+  
+  @SpringBootConfiguration - main annotation of springboot application
+  it combines 3 annotations
+  - @SpringBootConfiguration
+  - @EnableAutoConfiguration
+  - @ComponentScan
+  
+

@@ -1,0 +1,15 @@
+Creational design pattern
+
+1. Singleton
+2. Builder 
+3. Factory design 
+4. Factory method 
+4. Abstract factory design 
+
+Singleton: A class as one instance in the application and provides global point of access to that instance
+
+singleton design pattern ensures that class has only one instance througout the application,
+that instance is globally accessible
+the class controls its own object creation.
+
+

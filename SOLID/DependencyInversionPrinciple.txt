@@ -1,0 +1,110 @@
+Dependency Inversion Principle
+
+High level modules shoud not depend on low level modules. Both should depend on abstraction
+
+Abstractions should not depend on details. Details should depend on abstractions
+
+What is high level module ?
+
+High level class contains main business logic 
+
+
+class notificationService{
+  void notifyUser(String message){
+    // business logi 
+  }
+}
+here it is high level class - notify the user
+
+what is low level module ?
+A low level class handles specific technical details.
+
+class EmailService{
+  void sendEmail(String message){
+     System.out.println("Sending email: " + message);
+  }
+}
+
+this class knows how to send the email
+
+The Problem is 
+suppose we 
+
+class NotificationService{
+  EmailService email = new EmailService()
+  void notifyUser(){
+    email.sendEmail(message)
+  }
+}
+The high-level class directly depends on the low-level class.
+That's tight coupling.
+
+4. DIP says: introduce an abstraction
+interface Notification{           // this is our abstraction
+  void send(String message)
+} 
+
+NOW:
+
+class EmailService implements Notification{
+  @Override
+  void send(String message){
+    System.out.println(message)
+  }
+}
+
+class SMSservice implements Notificatin{
+  @Override
+  void send (String message){
+    System.out.println("send sms"+ message)
+  }
+}
+
+             Notification
+             <<interface>>
+               ↑      ↑
+               |      |
+         EmailService SMSService
+               
+               ↑
+               |
+      NotificationService
+
+
+class NotificationService {
+
+    private Notification notification;
+
+    NotificationService(Notification notification) {
+        this.notification = notification;
+    }
+
+    void notifyUser(String message) {
+        notification.send(message);
+    }
+}
+
+Notification email = new EmailService();
+
+NotificationService service =
+        new NotificationService(email);
+
+
+DIP states that high-level modules should not directly depend on low-level modules. Both should depend on abstractions. For example, instead of a NotificationService directly depending on EmailService, I would create a Notification interface. EmailService and SMSService implement that interface, and NotificationService depends only on the Notification interface. The concrete implementation can then be injected using dependency injection. This reduces coupling and makes the system easier to extend and test."
+
+Remember this diagram
+             Abstraction
+             Notification
+                  ↑
+          ┌───────┴───────┐
+          │               │
+     EmailService     SMSService
+          ↑               ↑
+          └───────┬───────┘
+                  │
+        NotificationService
+          (high-level)
+
+The golden rule:
+
+🔑 DIP = Don't depend directly on concrete implementations; depend on abstractions.

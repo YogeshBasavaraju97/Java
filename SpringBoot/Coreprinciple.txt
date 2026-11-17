@@ -1,0 +1,5 @@
+
+Dependency Injection (DI) is a design pattern in which an 
+object receives the objects it depends on from an external source instead of creating those objects itself.
+
+- tightly coupled, so we use interface 

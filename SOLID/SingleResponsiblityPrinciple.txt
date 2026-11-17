@@ -1,0 +1,21 @@
+Single Responsiblity Principle
+
+- A class should be responisble for exactly one actor or one reason to change.
+- if a class has 2 responsiblity a change requested for one can accidently break the other,so the two responsilblity
+  are now coupled through a class that neither of them fully owns.
+
+
+class UserValidator{
+  void validates(User user) { only validation}
+}
+
+class UserRepository{
+  void save(User user){ only persistance}
+}
+
+class userService{
+  void register(user user){
+    validotor.validate(user)
+    repository.save(user)
+  }
+}

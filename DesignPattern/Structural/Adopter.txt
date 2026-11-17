@@ -1,0 +1,218 @@
+Adopter Design pattern
+
+Adapter makes two incompatible interfaces work together.
+
+Think of a phone charger adapter: your wall socket provides one interface, but your phone expects another.
+The adapter sits between them and translates one into the other.
+
+"Adapter is a structural design pattern that allows two incompatible interfaces to work together.
+ It wraps an existing class, called the Adaptee, and exposes the interface expected by the Client. 
+ For example, if our application expects a PaymentProcessor.pay() method but a third-party PayPal API provides makePayment(),
+ a PayPalAdapter can implement PaymentProcessor and internally delegate to PayPalAPI.makePayment()."
+
+1. What problem does adopter solves
+Imagin an application with that expects below interface
+
+interface PaymentProcessor{
+  void pay(double payment)
+}
+
+Application uses like this
+class OrderServie{
+  private PaymentPrcessor PaymentProcessor
+
+  pulic OrderService(PaymentProcessor paymentProcessor){
+    this.paymentProcessor = paymentProcessor
+  }
+
+  public void chekout(double amount){
+    paymentProcessor.pay(amount)
+  }
+}
+
+Everything works.
+Now your company decides to integrate a third-party payment library.
+Unfortunately, that library has a completely different interface:
+
+class Paypal{
+   public void makePayment(double amount) {
+        System.out.println("Payment using PayPal: " + amount);
+    }
+}
+
+Your application expects:
+
+pay()
+
+But PayPal provides:
+
+makePayment()
+
+So you can't directly do:
+
+PaymentProcessor processor = new PayPalAPI();
+
+because:
+
+PaymentProcessor
+       ↓
+expects pay()
+
+PayPalAPI
+       ↓
+provides makePayment()
+
+The interfaces don't match.
+
+This is where Adapter comes in.
+
+2. Basic idea
+
+We create an adapter:
+
+Application
+     |
+     ↓
+PaymentProcessor
+     |
+     ↓
+PayPalAdapter
+     |
+     ↓
+PayPalAPI
+
+The adapter translates:
+
+pay()
+ ↓
+makePayment()
+
+So the application doesn't need to change.
+
+3. Real-world analogy
+
+Think about a power adapter.
+
+Suppose:
+
+Wall socket
+    ↓
+Indian socket
+
+but your device requires:
+
+US plug
+
+You use:
+
+Indian socket
+       ↓
+    Adapter
+       ↓
+    US plug
+       ↓
+     Device
+
+The device doesn't need to understand the Indian socket.
+
+The adapter handles the conversion.
+
+That's exactly what the software Adapter Pattern does.
+
+4. The four important components
+
+The Adapter Pattern generally has:
+
+Client
+Target
+Adapter
+Adaptee
+
+Let's understand each one.
+
+Client
+
+The class that needs to use something.
+
+class OrderService
+Target
+
+The interface the client expects.
+
+interface PaymentProcessor
+Adaptee
+
+The existing class with an incompatible interface.
+
+class PayPalAPI
+Adapter
+
+The class that translates between them.
+
+class PayPalAdapter
+
+So:
+
+             Client
+               |
+               ↓
+             Target
+               |
+               ↓
+            Adapter
+               |
+               ↓
+            Adaptee
+
+
+Third Party class
+
+class PayPalAPI{
+  public void makePayment(double amount){
+      System.out.println(
+            "PayPal payment: " + amount
+        );
+  }
+}
+
+We cannot modify this class.
+And it doesn't implement:
+PaymentProcessor
+because it has:
+makePayment()
+instead of:
+pay()
+
+Creating the Adopter
+
+class PayPalAPI implements PaymentProcessor{
+  private PayPalAPI PayPalAPI
+
+  public PayPalAPI(PayPalAPI payPalAPI){
+    this.payPalAPI = payPlayAPI
+  }
+
+  @Override
+  public void pay(double amount){
+    payPalAPI.makePayment(amount)
+  }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        PayPalAPI payPalAPI =
+                new PayPalAPI();
+
+        PaymentProcessor processor =
+                new PayPalAdapter(payPalAPI);
+
+        OrderService orderService =
+                new OrderService(processor);
+
+        orderService.checkout(1000);
+    }
+}
+
+

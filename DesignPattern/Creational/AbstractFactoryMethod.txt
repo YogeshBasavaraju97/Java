@@ -1,0 +1,12 @@
+What is Abstract Factory Design Pattern?
+
+A good answer would be:
+
+"Abstract Factory is a creational design pattern that provides an interface for creating families of related or 
+dependent objects without specifying their concrete classes. For example, a GUI factory can create buttons, checkboxes, 
+and text boxes for Windows or Mac. The concrete factory ensures that all products belong to the same family."
+
+Then give the distinction:
+
+"Factory Method generally focuses on creating one product, while Abstract Factory provides
+ multiple factory methods to create a family of related products."

@@ -1,0 +1,34 @@
+RestController ---> api gateway for java app
+
+GetMapping ---> for routing url 
+JAR - java arachive files. its like packages where it has multiple files, images, resources, folder. where we can share the file
+which help in migrating the files.
+1. to share java files easily
+2. to use external libraries(my sql-connector.jar)
+
+MAVEN 
+- project management tool 
+  helps in maintaining folder structure
+  creating JAR files
+  donloading the dependencies'
+  compliling code
+
+https://mvnrepository.com : to check the maven repository , where you get the dependencies and can be used in pom.xml
+
+super pom --> parent of all pom
+effective pom --> maven finally
+uses this. (pom + super pkm)
+
+
+maven uses 2 respository
+- maven central
+- local respositoryv= hidden in mac dir
+- other remote - company wise repo
+
+
+Life Cycle:
+    1. clean lifecycle: clean
+    2. Default lifecycle:
+       validate -> compile -> test -> package -> verify -> install -> depoloy
+
+    3.Site lifeCycle: site

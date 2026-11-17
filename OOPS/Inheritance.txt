@@ -1,0 +1,8 @@
+Inheritance in Java 
+is a core OOP concept that allows a class to acquire properties and behaviors from another class. 
+It helps in creating a new class from an existing class, promoting code reusability and better organization.
+
+A subclass can reuse the fields and methods of the parent class without rewriting the code
+A subclass can add its own fields and methods or modify existing ones to extend functionality.
+
+In Java, inheritance is achieved primarily using the extends keyword.

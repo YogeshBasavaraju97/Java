@@ -1,0 +1,113 @@
+Open/Close Principle
+
+Software entites like class, module, methods should be open for extension and closed for modification.
+
+Open for extension - We should be able to add new behaviour
+Closed for modification - We should not change exisiting code, everytime we add new behaviour
+
+X without OCP 
+
+class PaymentService{
+    public void processPayments(String paymentType, double amount){
+
+      if (paymentType.equals("CREDIT_CARD")){
+        System.out.println("Processing credit card payment", +amount);
+      } 
+      else if(paymentType.equals("UPI")){
+        System.out.println("Processing UPI payment", +amount)
+      }
+      else if (paymentType.equals("PAYPAL")){
+        Systme.out.println("Processing payPal payment", +amount)
+      }
+    }
+}
+
+Usage:
+
+PaymentService service = new PaymentService();
+service.processPayment("UPI", 5000);
+
+What's the problem?
+Tomorrow, the business says:
+"We want to support Google Pay."
+
+You have to modify PaymentService:
+else if (paymentType.equals("GOOGLE_PAY")) {
+    System.out.println("Processing Google Pay payment");
+}
+
+Then later:
+Credit Card
+UPI
+PayPal
+Google Pay
+Apple Pay
+Net Banking
+Amazon Pay
+Crypto
+...
+
+Your PaymentService keeps growing.
+This violates Open/Closed Principle because the existing class needs to be modified whenever a new payment type is introduced.
+
+**Applying OCP**
+Instead of putting everyting inside paymentSerive, use abstraction
+
+
+interface PaymentMethod{
+  void pay(double amount)
+}
+
+Now each payment method implements the interface
+
+class CreditCardpayment implements PaymentMethod{
+  @Override
+  public void pay(double amount){
+     System.out.println("Paid ₹" + amount + " using Credit Card");
+  }
+}
+
+class UPIpayment implements PaymentMethod{
+  @Override
+  public void pay(double amount){
+     System.out.println("Paid ₹" + amount + " using UPI");
+  }
+}
+
+class PayPalPayment implements PaymentMethod{
+  @Override
+  public void pay(double amount){
+     System.out.println("Paid ₹" + amount + " using payPal");
+  }
+}
+
+Now our service is very simple 
+class PaymentService {
+
+  public void processPayment(PaymentMethod paymenMethod, double amt){
+    paymentMethod.pay(amt)
+  }
+}
+
+IN MAIN CLASS 
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        PaymentService service = new PaymentService();
+
+        service.processPayment(
+            new UPIPayment(),
+            5000
+        );
+
+        service.processPayment(
+            new CreditCardPayment(),
+            10000
+        );
+    }
+}
+
+
+

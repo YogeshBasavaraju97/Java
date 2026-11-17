@@ -1,0 +1,10 @@
+Abstraction
+Abstraction is process of hiding the implementation details and showing only the essential features of the object.
+It helps to foucus on what object does but  rather than how it does in detail.
+
+In Java abstraction is implemented using abstract classes and interfaces
+Interfaces can provide 100% abrstraction while abstract class can provide partial abstraction.
+
+Abstract class defines common base using inheritance
+interface defines behaviour implemented by multiple classes
+

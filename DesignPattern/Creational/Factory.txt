@@ -1,0 +1,228 @@
+Factory Design pattern 
+
+What is Factory Design Pattern?
+
+"Factory Design Pattern is a creational design pattern that encapsulates object creation logic. 
+Instead of the client directly creating concrete objects using new, it delegates object creation to a factory. 
+The factory determines which implementation should be instantiated based on the given input. 
+This reduces coupling between the client and concrete classes and makes the code easier to maintain and extend."
+
+
+To create an objects without exposing the object-creation logic to the client.
+Instead of the client directly using new to decide which object to create, we give that responsibility to a Factory.
+Factory becomes useful when object creation is complex or there are many possible implementations.
+in Simple Word 
+Instead of writing
+
+new CreditCardPayment()
+new UPIpayment()
+new paypalpayment()
+
+everywhere in the application we create factory that decides which object to be created. 
+
+First lets Understand
+
+class CreditCardPayment{
+  public void pay(){
+    System.out.println("pay using credit card");
+  }
+}
+class UPIPayment {
+    public void pay() {
+        System.out.println("UPI Payment");
+    }
+}
+class PayPalPayment {
+    public void pay() {
+        System.out.println("PayPal Payment");
+    }
+}
+
+Now imagine our client code:
+public class PaymentService {
+
+    public void makePayment(String type) {
+
+        if (type.equals("UPI")) {
+
+            UPIPayment payment = new UPIPayment();
+            payment.pay();
+
+        } else if (type.equals("CARD")) {
+
+            CreditCardPayment payment = new CreditCardPayment();
+            payment.pay();
+
+        } else if (type.equals("PAYPAL")) {
+
+            PayPalPayment payment = new PayPalPayment();
+            payment.pay();
+        }
+    }
+}
+There is a problem.
+PaymentService knows how every payment object is created.
+PaymentService
+      |
+      ├── new UPIPayment()
+      ├── new CreditCardPayment()
+      └── new PayPalPayment()
+
+This creates tight coupling.
+
+So let create interface
+
+public interface payment{
+  void pay()
+}
+
+public class CreditcardPayment implements payment{
+  @Override
+  public void pay(){
+    System.out.println("pay using creditcard");
+  }
+}
+public class CreditCardPayment implements Payment {
+
+    @Override
+    public void pay() {
+        System.out.println("Payment using Credit Card");
+    }
+}
+public class PayPalPayment implements Payment {
+
+    @Override
+    public void pay() {
+        System.out.println("Payment using PayPal");
+    }
+}
+              Payment
+                 ↑
+       ┌─────────┼─────────┐
+       │         │         │
+      UPI       Card     PayPal
+
+      3. Create the Factory
+Now we create a separate class responsible for creating these objects.
+public class PaymentFactory {
+
+    public static Payment createPayment(String type) {
+
+        if (type.equalsIgnoreCase("UPI")) {
+
+            return new UPIPayment();
+
+        } else if (type.equalsIgnoreCase("CARD")) {
+
+            return new CreditCardPayment();
+
+        } else if (type.equalsIgnoreCase("PAYPAL")) {
+
+            return new PayPalPayment();
+        }
+
+        throw new IllegalArgumentException(
+            "Invalid payment type: " + type
+        );
+    }
+}
+
+
+
+Now the responsibility is separated.
+                 PaymentFactory
+                       |
+          decides which object to create
+                       |
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+        UPI           Card        PayPal
+
+
+4. Use the Factory
+Instead of doing:
+new UPIPayment();
+
+the client does:
+Payment payment =
+        PaymentFactory.createPayment("UPI");
+
+payment.pay();
+
+For card:
+Payment payment =
+        PaymentFactory.createPayment("CARD");
+
+payment.pay();
+
+For PayPal:
+Payment payment =
+        PaymentFactory.createPayment("PAYPAL");
+
+payment.pay();
+
+The client doesn't care about the actual implementation.
+It only knows:
+Payment payment
+
+5. What exactly did we achieve?
+Before Factory:
+PaymentService
+     |
+     ├── UPIPayment
+     ├── CreditCardPayment
+     └── PayPalPayment
+
+After Factory:
+PaymentService
+     |
+     ↓
+PaymentFactory
+     |
+     ├── UPIPayment
+     ├── CreditCardPayment
+     └── PayPalPayment
+
+The object creation responsibility has been moved into the Factory.
+That's the main idea.
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Payment payment =
+            PaymentFactory.createPayment("UPI");
+
+        payment.pay();
+    }
+}
+
+Output:
+Payment using UPI
+
+13. Factory and Open/Closed Principle
+There's an important connection with the Open/Closed Principle you were studying.
+OCP says:
+Software should be open for extension but closed for modification.
+
+Suppose you add:
+class ApplePayPayment implements Payment {
+    
+    @Override
+    public void pay() {
+        System.out.println("Apple Pay");
+    }
+}
+
+You still need to modify the Factory:
+else if (type.equalsIgnoreCase("APPLE_PAY")) {
+    return new ApplePayPayment();
+}
+
+So this simple Factory implementation isn't perfectly OCP compliant.
+That's an important interview point.
+A simple if/else Factory is useful, but for large systems we can improve it using other approaches such as:
+- Factory Method
+- Abstract Factory
+- Registry/Map-based Factory
+- Spring's dependency injection

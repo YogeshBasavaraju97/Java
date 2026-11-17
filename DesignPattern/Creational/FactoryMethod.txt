@@ -1,0 +1,468 @@
+Factory Method Design Pattern
+
+Factory Method is a creational design pattern that defines a method for creating objects, 
+while allowing subclasses to decide which concrete object should be created.
+
+
+Instead of creating objects directly using new, 
+define a method for creating the object and let subclasses decide which object to create.
+
+1. What problem does Factory Method solve?
+
+Suppose you have a notification system.
+
+You can send:
+
+Email notification
+SMS notification
+Push notification
+
+A simple implementation might look like this:
+
+class NotificationService {
+
+    public void sendNotification(String type) {
+
+        if (type.equals("email")) {
+            EmailNotification email = new EmailNotification();
+            email.send();
+        }
+        else if (type.equals("sms")) {
+            SMSNotification sms = new SMSNotification();
+            sms.send();
+        }
+    }
+}
+
+The problem is that NotificationService is now responsible for:
+
+Deciding which object to create.
+Creating that object using new.
+Using that object.
+
+As the number of notification types increases, this class becomes difficult to maintain.
+For example:
+
+if (type.equals("email")) {
+    ...
+}
+else if (type.equals("sms")) {
+    ...
+}
+else if (type.equals("push")) {
+    ...
+}
+else if (type.equals("whatsapp")) {
+    ...
+}
+
+This is where the Factory Method Pattern helps.
+
+3. First create an interface
+
+Let's create a common interface:
+
+interface Notification {
+    void send();
+}
+
+Now different notification types implement it.
+
+class EmailNotification implements Notification {
+
+    @Override
+    public void send() {
+        System.out.println("Sending Email");
+    }
+}
+class SMSNotification implements Notification {
+
+    @Override
+    public void send() {
+        System.out.println("Sending SMS");
+    }
+}
+class PushNotification implements Notification {
+
+    @Override
+    public void send() {
+        System.out.println("Sending Push Notification");
+    }
+}
+
+So we have:
+
+             Notification
+                  ↑
+        ┌─────────┼─────────┐
+        │         │         │
+      Email      SMS       Push
+
+4. Now create the Factory
+
+Here's where Factory Method comes in.
+
+abstract class NotificationFactory {
+
+    public abstract Notification createNotification();
+
+}
+
+Notice something important:
+
+public abstract Notification createNotification();
+
+The factory doesn't know which notification will be created yet.
+
+It only says:
+
+"Some notification will be created."
+
+5. Create concrete factories
+
+Now each subclass decides what it creates.
+
+Email Factory
+class EmailNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new EmailNotification();
+    }
+}
+SMS Factory
+class SMSNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new SMSNotification();
+    }
+}
+Push Factory
+class PushNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new PushNotification();
+    }
+}
+
+Now the structure is:
+
+              NotificationFactory
+                      |
+          createNotification()
+                      |
+          ┌───────────┼────────────┐
+          ↓           ↓            ↓
+     EmailFactory  SMSFactory  PushFactory
+          |           |            |
+          ↓           ↓            ↓
+       Email         SMS          Push
+6. How does the client use it?
+
+Suppose we want an email notification.
+
+NotificationFactory factory =
+        new EmailNotificationFactory();
+
+Notification notification =
+        factory.createNotification();
+
+notification.send();
+
+Output:
+
+Sending Email
+
+For SMS:
+
+NotificationFactory factory =
+        new SMSNotificationFactory();
+
+Notification notification =
+        factory.createNotification();
+
+notification.send();
+
+Output:
+
+Sending SMS
+
+The important part is that the client works with:
+
+Notification
+
+and
+
+NotificationFactory
+
+rather than directly depending on:
+
+EmailNotification
+SMSNotification
+PushNotification
+7. Why is this called "Factory Method"?
+
+Look carefully:
+
+public abstract Notification createNotification();
+
+This method is the Factory Method.
+
+Its job is to create an object.
+
+The subclasses override that method:
+
+class EmailNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new EmailNotification();
+    }
+}
+
+So:
+
+createNotification()
+       ↓
+Factory Method
+       ↓
+creates
+       ↓
+Notification object
+8. The most important concept
+
+This is the part I would remember for interviews:
+
+Without Factory Method
+
+The client decides what to create:
+
+EmailNotification notification =
+        new EmailNotification();
+With Factory Method
+
+The factory decides what to create:
+
+Notification notification =
+        factory.createNotification();
+
+So the responsibility of object creation is moved away from the client.
+
+9. Where does polymorphism come in?
+
+This example is a very good demonstration of polymorphism.
+
+We have:
+
+Notification notification;
+
+But the actual object can be:
+
+new EmailNotification()
+
+or
+
+new SMSNotification()
+
+or
+
+new PushNotification()
+
+For example:
+
+Notification notification =
+        new EmailNotification();
+
+notification.send();
+
+Java looks at the actual object:
+
+Notification reference
+        ↓
+EmailNotification object
+        ↓
+EmailNotification.send()
+
+This is runtime polymorphism.
+
+10. Complete example
+
+Here is the complete implementation:
+
+interface Notification {
+
+    void send();
+}
+class EmailNotification implements Notification {
+
+    @Override
+    public void send() {
+        System.out.println("Sending Email");
+    }
+}
+class SMSNotification implements Notification {
+
+    @Override
+    public void send() {
+        System.out.println("Sending SMS");
+    }
+}
+abstract class NotificationFactory {
+
+    public abstract Notification createNotification();
+
+    public void sendNotification() {
+
+        Notification notification = createNotification();
+
+        notification.send();
+    }
+}
+
+Email factory:
+
+class EmailNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new EmailNotification();
+    }
+}
+
+SMS factory:
+
+class SMSNotificationFactory extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new SMSNotification();
+    }
+}
+
+Main:
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        NotificationFactory factory =
+                new EmailNotificationFactory();
+
+        factory.sendNotification();
+    }
+}
+
+Output:
+
+Sending Email
+
+11. Why not just use a normal Factory?
+
+This is an important distinction.
+
+You may have seen something like:
+
+class NotificationFactory {
+
+    public static Notification createNotification(String type) {
+
+        if (type.equals("email")) {
+            return new EmailNotification();
+        }
+
+        if (type.equals("sms")) {
+            return new SMSNotification();
+        }
+
+        return null;
+    }
+}
+
+This is commonly called a Simple Factory or Factory class.
+
+It is different from the classic Factory Method Pattern.
+
+Simple Factory
+NotificationFactory
+       |
+       |-- if email → Email
+       |
+       |-- if sms → SMS
+       |
+       |-- if push → Push
+
+One class decides everything.
+
+Factory Method
+NotificationFactory
+       |
+       |-- EmailFactory → Email
+       |
+       |-- SMSFactory → SMS
+       |
+       |-- PushFactory → Push
+
+Each factory subclass decides what to create.
+
+12. Why is Factory Method useful?
+
+Imagine your application initially supports:
+
+Email
+SMS
+
+Later you add:
+
+Push
+WhatsApp
+Slack
+Teams
+
+With Factory Method, you can create new factories:
+
+class SlackNotificationFactory
+        extends NotificationFactory {
+
+    @Override
+    public Notification createNotification() {
+        return new SlackNotification();
+    }
+}
+
+You don't need to modify the existing factories.
+
+This follows the Open/Closed Principle:
+
+Classes should be open for extension but closed for modification.
+
+13. Real-world analogy
+
+Imagine a restaurant.
+
+You don't go into the kitchen and say:
+
+"Give me a Pizza object."
+
+Instead, you place an order:
+
+Customer
+   ↓
+Order
+   ↓
+Kitchen
+   ↓
+Creates appropriate food
+
+The customer doesn't care exactly how the food is created.
+
+Similarly:
+
+Client
+   ↓
+Factory Method
+   ↓
+Creates appropriate object
+14. Factory Method vs Factory Pattern
+

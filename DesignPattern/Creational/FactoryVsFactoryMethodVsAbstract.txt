@@ -1,0 +1,28 @@
+4. Factory vs Factory Method vs Abstract Factory
+These names often confuse people.
+Simple Factory
+One class decides which object to create.
+PaymentFactory
+      |
+      ├── UPI
+      ├── Card
+      └── PayPal
+
+Factory Method
+Object creation is delegated to subclasses.
+Creator
+   |
+   ├── UPI Creator
+   ├── Card Creator
+   └── PayPal Creator
+
+Abstract Factory
+Creates families of related objects.
+For example:
+WindowsFactory
+   ├── WindowsButton
+   └── WindowsCheckbox
+
+MacFactory
+   ├── MacButton
+   └── MacCheckbox

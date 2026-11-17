@@ -1,0 +1,68 @@
+
+Interface Segregation Principle (ISP)
+
+A class should not be forced to implement method that it is not need
+
+- dont force classes to implement things they dont need
+- Dont create one huge interface, create smaller focused interface
+
+X voilation example X
+interface Animal{
+  void eat();
+  void walk();
+  void fly();
+  void swim();
+
+}
+
+class Dog implements Animal{
+  public void eat(){
+    // dog eats pedigree
+  }
+  public void walk(){
+    //dog walks on 4 leg
+  }
+
+  public void fly(){
+    //dog cannot fly //forced to implement fly method   //
+  }
+
+  public void swim(){
+    //dog can swim
+  }
+}
+
+Insteaded of creating one big interface class need to create smaller focused interface
+
+interface Eatable{
+  void eat();
+}
+
+interface walkable{
+  void walk()
+}
+
+interface Flyable{
+  void Fly()
+}
+
+interface Swimmable{
+  void swim()
+}
+
+class Dog implements Eatable, walkable, Swimable{
+   
+   public void Eatable{
+     System.out.println("Dog is eating");
+   }
+
+   public void walkable{
+    System.out.println("Dog is walking");
+   }
+
+   public void Swimable{
+     Systme.out.println("Dog can swim");
+   }
+}
+
+
